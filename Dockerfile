@@ -10,7 +10,9 @@ RUN npm ci
 
 ADD ./ /app
 
-RUN npm run build
+RUN npm run build && \
+    chmod +x /app/bin/run && \
+    chmod +x /app/bin/dev
 
 FROM node:18-alpine
 
