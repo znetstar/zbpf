@@ -95,7 +95,7 @@ export default class PortForwardAdd extends Command {
       socket['Socket']['ListenStream'] = [ ...flags.listen ];
     }
 
-    if (flags.bindTo) {
+    if (flags.bindToDevice) {
       socket['Socket'] = socket['Socket'] || {};
       socket['Socket']['BindToDevice'] = [ ...flags.bindToDevice ];
     }
