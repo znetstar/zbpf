@@ -1,0 +1,24 @@
+FROM node:18-slim
+
+WORKDIR /app
+
+ADD ./package-lock.json /app/package-lock.json
+
+ADD ./package.json /app/package.json
+
+RUN npm ci
+
+ADD ./ /app
+
+RUN npm run build
+
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY --from=0 /app/bin /app/bin
+COPY --from=0 /app/dist /app/dist
+COPY --from=0 /app/package.json /app/package.json
+COPY --from=0 /app/node_modules  /app/node_modules
+
+ENTRYPOINT [ "/app/bin/run" ]
