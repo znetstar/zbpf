@@ -21,7 +21,7 @@ export default class PortForwardAdd extends Command {
       description: 'Add an arbitrary option to the service unit file',
       required: false,
     }),
-    bindTo: Flags.string({
+    bindToDevice: Flags.string({
       char: 'b',
       multiple: true,
       description: 'Adds interfaces to the "BindTo" section of the unit file',
@@ -97,7 +97,7 @@ export default class PortForwardAdd extends Command {
 
     if (flags.bindTo) {
       socket['Socket'] = socket['Socket'] || {};
-      socket['Socket']['BindTo'] = [ ...flags.bindTo ];
+      socket['Socket']['BindToDevice'] = [ ...flags.bindToDevice ];
     }
 
     if (flags.wantedBy) {
