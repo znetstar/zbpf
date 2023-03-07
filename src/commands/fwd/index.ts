@@ -63,7 +63,7 @@ export default class PortForwardAdd extends Command {
     }),
     shell: Flags.string({
       description: 'Use a specific shell to execute the output',
-      default: '/bin/sh'
+      default: '/bin/bash'
     }),
   }
 
