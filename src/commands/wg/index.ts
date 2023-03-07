@@ -122,12 +122,8 @@ export default class WGAdd extends Command {
       netdev['WireGuardPeer']['AllowedIPs'] = flags.allowedIps.join(',');
     }
 
-    await fs.ensureDir(flags.dir);
-
-    await fs.writeFile(`${flags.dir}/${unitName}-private-key`, flags.privateKey);
     if ( flags.presharedKey) {
       netdev['WireGuardPeer']['PresharedKeyFile'] = `${flags.dir}/${unitName}-preshared-key`;
-      await fs.writeFile(`${flags.dir}/${unitName}-preshared-key`, flags.presharedKey);
     }
 
     network['Match'] = {
@@ -151,7 +147,15 @@ export default class WGAdd extends Command {
     if (flags.networkOption)
       writeOptions(network, flags.networkOption);
 
+    let preshared = flags.presharedKey ? `cat << EOF > "${flags.dir}/${unitName}-preshared-key"
+        ${flags.presharedKey}
+      EOF`.split("\n").map(k => k.trim()).join("\n") : '';
+
     const output = (`#!${flags.shell}
+      cat << EOF > "${flags.dir}/${unitName}-private-key"
+        ${flags.privateKey}
+      EOF
+      ${preshared}
       cat << EOF > "${flags.dir}/${unitName}.netdev"
         ${makeUnitFile(netdev)}
       EOF

@@ -123,8 +123,8 @@ export default class PortForwardAdd extends Command {
       EOF
 
       systemctl daemon-reload
-      systemctl ${unitName}.socket
-      systemctl ${unitName}.socket
+      systemctl enable ${unitName}.socket
+      systemctl start ${unitName}.socket
     `).split("\n").map(k => k.trim()).join("\n");
 
     if (flags.file) {
