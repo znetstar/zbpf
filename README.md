@@ -17,3 +17,7 @@ Syntax Example:
 `zbpf wg <interface name> <various parameters>`
 Full example
 `zbpf wg0 ...`
+
+## Docker
+
+Build docker with `docker build -t zbpf .`, or use the image `public.ecr.aws/znetstar/zbpf`
