@@ -65,6 +65,12 @@ export default class PortForwardAdd extends Command {
       description: 'Use a specific shell to execute the output',
       default: '/bin/bash'
     }),
+    enable: Flags.boolean({
+      description: 'If true will enable the service unit file after writing',
+    }),
+    start: Flags.boolean({
+      description: 'If true will start the service unit file after writing',
+    }),
   }
 
   static args = {
@@ -123,9 +129,9 @@ export default class PortForwardAdd extends Command {
       EOF
 
       systemctl daemon-reload
-      systemctl enable ${unitName}.socket
-      systemctl start ${unitName}.socket
-    `).split("\n").map(k => k.trim()).join("\n");
+      ${flags.enable ? `systemctl enable ${unitName}.socket` : ''}
+      ${flags.start ? `systemctl start ${unitName}.socket` : ''}
+    `).split("\n").filter(s => s.trim().length).map(k => k.trim()).join("\n");
 
     if (flags.file) {
       await fs.writeFile(flags.file, output);

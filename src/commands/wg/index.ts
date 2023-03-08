@@ -80,9 +80,16 @@ export default class WGAdd extends Command {
       char: 'F',
       description: 'Append output to this file rather than STDOUT',
     }),
+    ipMasquerade: Flags.string({
+      char: 'm',
+      description: 'Sets the IPMasquerade field'
+    }),
     shell: Flags.string({
       description: 'Use a specific shell to execute the output',
       default: '/bin/bash'
+    }),
+    restart: Flags.boolean({
+      description: 'If true will restart networkd',
     }),
   }
 
@@ -140,6 +147,9 @@ export default class WGAdd extends Command {
       GatewayOnlink: 'true'
     }
 
+    if (flags.ipMasquerade) {
+      network['Network']['IPMasquerade'] = flags.ipMasquerade;
+    }
 
     if (flags.netdevOption)
       writeOptions(netdev, flags.netdevOption);
@@ -164,8 +174,8 @@ export default class WGAdd extends Command {
       EOF
 
       systemctl daemon-reload
-      systemctl restart systemd-networkd
-    `).split("\n").map(k => k.trim()).join("\n");
+      ${flags.start ? `systemctl restart systemd-networkd` : ''}
+    `).split("\n").filter(s => s.trim().length).map(k => k.trim()).join("\n");
 
     if (flags.file) {
       await fs.writeFile(flags.file, output);
