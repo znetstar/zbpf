@@ -159,6 +159,9 @@ export default class PortForwardAdd extends Command {
     if (flags.wantedBy)
       service['Install'] = { WantedBy: flags.wantedBy };
 
+    if (flags.serviceOption)
+      writeOptions(service, flags.serviceOption);
+
     const output = (`#!${flags.shell}
       cat << EOF > "${flags.dir}/${args.unit}.service"
         ${makeUnitFile(service)}
