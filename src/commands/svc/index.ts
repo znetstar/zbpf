@@ -84,6 +84,18 @@ export default class PortForwardAdd extends Command {
       multiple: false,
       default: 'multi-user.target'
     }),
+    environment: Flags.string({
+      char: 'v',
+      multiple: true,
+      required: false,
+      description: 'Inline environment variables in the unit file'
+    }),
+    environmentFile: Flags.string({
+      char: 'V',
+      multiple: true,
+      required: false,
+      description: 'File containing environment variables'
+    }),
     enable: Flags.boolean({
       description: 'If true will enable the service unit file after writing',
     }),
@@ -130,9 +142,19 @@ export default class PortForwardAdd extends Command {
       service['Unit']['Requires'] = service['Unit']['After'] = flags.afterRequires.join(' ');
 
     service['Service'] = {
-      ExecStart: shWrap(flags.execStart as string),
       Type: flags.type,
     };
+
+    if (flags.execStartPre)
+      service['Service']['ExecStartPre'] = flags.execStartPre.map(shWrap);
+
+    service['Service']['ExecStart'] = shWrap(flags.execStart as string);
+
+    if (flags.execStartPost)
+      service['Service']['ExecStartPost'] = flags.execStartPost.map(shWrap);
+
+    if (flags.execStop)
+      service['Service']['ExecStop'] = flags.execStop.map(shWrap);
 
     if (flags.restart)
       service['Service']['Restart'] = flags.restart;
@@ -146,15 +168,11 @@ export default class PortForwardAdd extends Command {
     if (flags.timeoutStopSec)
       service['Service']['TimeoutStopSec'] = flags.timeoutStopSec.toString();
 
-    if (flags.execStartPre)
-      service['Service']['ExecStartPre'] = flags.execStartPre.map(shWrap);
+    if (flags.environment)
+      service['Service']['Environment'] = flags.environment;
 
-    if (flags.execStartPost)
-      service['Service']['ExecStartPost'] = flags.execStartPost.map(shWrap);
-
-    if (flags.execStop)
-      service['Service']['ExecStop'] = flags.execStop.map(shWrap);
-
+    if (flags.environmentFile)
+      service['Service']['EnvironmentFile'] = flags.environmentFile;
 
     if (flags.wantedBy)
       service['Install'] = { WantedBy: flags.wantedBy };

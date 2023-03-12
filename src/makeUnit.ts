@@ -6,7 +6,7 @@ export function makeUnitFile(unit: UnitFile) {
 
   for (const sectionName of Object.getOwnPropertyNames(unit)) {
     lines.push(`[${sectionName}]`);
-    for (const propName of Object.getOwnPropertyNames(unit[sectionName])) {
+    for (const propName of Object.getOwnPropertyNames(unit[sectionName]).sort()) {
       lines.push(
         ...([] as string[]).concat(unit[sectionName][propName]).map(val => `${propName}=${val}`)
       );
