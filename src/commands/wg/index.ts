@@ -159,7 +159,7 @@ export default class WGAdd extends Command {
 
     let preshared = flags.presharedKey ? `cat << EOF > "${flags.dir}/${unitName}-preshared-key"
         ${flags.presharedKey}
-      EOF`.split("\n").map(k => k.trim()).join("\n") : '';
+      EOF`.split("\n").map(k => k.trimStart()).join("\n").trimEnd() : '';
 
     const output = (`#!${flags.shell}
       cat << EOF > "${flags.dir}/${unitName}-private-key"
@@ -175,7 +175,7 @@ export default class WGAdd extends Command {
 
       systemctl daemon-reload
       ${flags.start ? `systemctl restart systemd-networkd` : ''}
-    `).split("\n").map(k => k.trimStart()).join("\n");
+    `).split("\n").map(k => k.trimStart()).join("\n").trimEnd();;
 
     if (flags.file) {
       await fs.writeFile(flags.file, output);
