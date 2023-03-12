@@ -175,7 +175,7 @@ export default class WGAdd extends Command {
 
       systemctl daemon-reload
       ${flags.start ? `systemctl restart systemd-networkd` : ''}
-    `).split("\n").filter(s => s.trim().length).map(k => k.trim()).join("\n");
+    `).split("\n").map(k => k.trimStart()).join("\n");
 
     if (flags.file) {
       await fs.writeFile(flags.file, output);

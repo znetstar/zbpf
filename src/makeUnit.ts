@@ -5,15 +5,18 @@ export function makeUnitFile(unit: UnitFile) {
   const lines: string[] = [];
 
   for (const sectionName of Object.getOwnPropertyNames(unit)) {
-    lines.push(`[${sectionName}]`);
+    let block: string[] = [ `[${sectionName}]` ];
+
     for (const propName of Object.getOwnPropertyNames(unit[sectionName]).sort()) {
-      lines.push(
+      block.push(
         ...([] as string[]).concat(unit[sectionName][propName]).map(val => `${propName}=${val}`)
       );
     }
+
+    lines.push(...block, '');
   }
 
-  return lines.join('\n').trim();
+  return lines.join('\n').trimEnd();
 }
 
 export function writeOptions(unit: UnitFile, options: string[], sep: string = ':') {
