@@ -13,4 +13,3 @@ node('zbnetwork-amd64') {
       }
     }
 }
-s
