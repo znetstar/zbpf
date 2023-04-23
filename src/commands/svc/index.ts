@@ -188,7 +188,7 @@ export default class PortForwardAdd extends Command {
       systemctl daemon-reload
       ${flags.enable ? `systemctl enable ${args.unit}.service` : ''}
       ${flags.start ? `systemctl start ${args.unit}.service` : ''}
-    `).split("\n").map(k => k.trimStart()).join("\n").trimEnd();;
+    `).split("\n").map(k => k.trimStart()).join("\n").trimEnd()+"\n";
 
     if (flags.file) {
       await fs.writeFile(flags.file, output);

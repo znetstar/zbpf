@@ -1,6 +1,6 @@
 {
   "name": "zbpf",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Adds systemd system unit files for port forwarding, and network unit files for wireguard interfaces.",
   "author": {
     "name": "Zachary Boyd",
